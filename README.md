@@ -1,0 +1,2 @@
+TypeB
+Pebble Watchface
