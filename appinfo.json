@@ -1,0 +1,32 @@
+{
+    "appKeys": {
+        "back_color": 1,
+        "fore_color": 2,
+        "round_to": 0
+    },
+    "capabilities": [
+        "configurable"
+    ],
+    "companyName": "wettsten",
+    "longName": "Type B",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/TypeB_bw.png",
+                "name": "LOGO",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "TypeB",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "62c38dab-802f-446a-bbb5-11d1dd401f77",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
