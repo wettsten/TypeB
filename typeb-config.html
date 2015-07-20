@@ -28,8 +28,14 @@
 			</fieldset>
 		</div>
 
+		<div>
+			<fieldset class="ui-grid-a">
+			<button type="submit" data-theme="b" id="b-invert">Swap Colors</button>
+			</fieldset>
+		</div>
+
 		<div id='back_toggle'>
-			<label for="back_color">Background Color (click to expand):</label>
+			<label id="lb_back" for="back_color">Background Color (click to expand):</label>
 			<br />
 			<svg width="60" height="10">
 			  <rect id='back_disp' x="10" y="0" width="40" height="10" stroke="#000000" stroke-width="1" fill="#FFFFFF" />
@@ -107,7 +113,7 @@
 		</div>
 
 		<div id='fore_toggle'>
-			<label for="fore_color">Foreground Color (click to expand):</label>
+			<label id="lb_fore" for="fore_color">Foreground Color (click to expand):</label>
 			<br />
 			<svg width="60" height="10">
 			  <rect id='fore_disp' x="10" y="0" width="40" height="10" stroke="#000000" stroke-width="1" fill="#FFFFFF" />
@@ -198,30 +204,33 @@
 		if (window.location.search) {
 			var settings = decodeURIComponent(window.location.search).replace('?settings=','');
 			if (settings == "null") {
-				settings = '{"round_to":1,"back_color":"#FFFFFF","fore_color":"#000000"}';
+				settings = '{"round_to":1,"back_color":"#FFFFFF","fore_color":"#000000","has_color":1}';
 			}
 			if (settings) {
 				var json = $.parseJSON(settings);
 				if (json.round_to) {
 					$('#round').val(json.round_to).selectmenu('refresh');
-				}
-				if (json.back_color) {
-					$back_color = json.back_color;
 				} else {
-					$back_color = "#FFFFFF";
+					$('#round').val(1).selectmenu('refresh');
 				}
-				if (json.fore_color) {
-					$fore_color = json.fore_color;
+				$has_color = (json.has_color) ? json.has_color : 1;
+				if ($has_color == 0) {
+					$('#lb_back').text("Background Color:");
+					$('#lb_fore').text("Foreground Color:");
 				} else {
-					$fore_color = "#000000";
+					$('#lb_back').text("Background Color (click to expand):");
+					$('#lb_fore').text("Foreground Color (click to expand):");
 				}
+				$back_color = (json.back_color) ? json.back_color : "#FFFFFF";
+				$fore_color = (json.fore_color) ? json.fore_color : "#000000";
+				
 				$('#back_color').text($back_color);
 				$('#back_disp').attr("fill",$back_color);
 				$('#fore_color').text($fore_color);
 				$('#fore_disp').attr("fill",$fore_color);
-      }
-    }
-  }
+      		}
+    	}
+  	}
 	function saveOptions() {
 		var options = {
 			'round_to': parseInt($('#round').val()),
@@ -233,11 +242,15 @@
 	$().ready(function() {
 		$("#back_div").toggle();
 		$("#fore_div").toggle();
-		$("#back_toggle").click(function(){
-			$("#back_div").toggle('fast');
+		$("#back_toggle").click(function() {
+			if ($has_color == 1) {
+				$("#back_div").toggle('fast');
+			}
 		})
-		$("#fore_toggle").click(function(){
-			$("#fore_div").toggle('fast');
+		$("#fore_toggle").click(function() {
+			if ($has_color == 1) {
+				$("#fore_div").toggle('fast');
+			}
 		})
 		$('polygon').click(function(){
 			if ($(this).parent().attr('id') == 'back') {
@@ -250,6 +263,15 @@
 				$('#fore_disp').attr("fill", $fore_color);
 			}
     	});
+		$("#b-invert").click(function() {
+			$temp = $back_color;
+			$back_color = $fore_color;
+			$('#back_color').text($back_color);
+			$('#back_disp').attr("fill",$back_color);
+			$fore_color = $temp;
+			$('#fore_color').text($fore_color);
+			$('#fore_disp').attr("fill", $fore_color);
+		});
 		$("#b-cancel").click(function() {
 			document.location = "pebblejs://close";
 		});
