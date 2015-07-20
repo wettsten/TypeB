@@ -8,7 +8,7 @@ GRect r_time_text;
 GRect r_date;
 GRect r_time2;
 int i_time_text;
-
+	
 unsigned int HexStringToUInt(char const* hexstring)	{
 	APP_LOG(APP_LOG_LEVEL_INFO, "HexStringToUInt in");
 	unsigned int result = 0;
@@ -37,12 +37,21 @@ unsigned int HexStringToUInt(char const* hexstring)	{
 
 GColor convert_to_gcolor(char hex_string[8]) {
 	APP_LOG(APP_LOG_LEVEL_INFO, "convert_to_gcolor in");
-	char str_color[7];
-	memcpy(str_color, ++hex_string, 6);
-	str_color[6] = '\0';
-	int color = HexStringToUInt(str_color);
-	APP_LOG(APP_LOG_LEVEL_INFO, "convert_to_gcolor out");
-	return GColorFromHEX(color);
+	#ifdef PBL_COLOR
+		char str_color[7];
+		memcpy(str_color, ++hex_string, 6);
+		str_color[6] = '\0';
+		int color = HexStringToUInt(str_color);
+		APP_LOG(APP_LOG_LEVEL_INFO, "convert_to_gcolor out");
+		return GColorFromHEX(color);
+	#else
+		APP_LOG(APP_LOG_LEVEL_INFO, "convert_to_gcolor out");
+		if (hex_string[1] == '0') {
+			return GColorBlack;
+		} else {
+			return GColorWhite;
+		}	
+	#endif
 }
 
 char *generate_hour_text() {
@@ -240,7 +249,9 @@ void update_time_text() {
 	
 	text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
 	i_time_text = 0;
+	text_layer_set_overflow_mode(s_time_layer, GTextOverflowModeWordWrap);
 	update_time_text_font_size();
+	text_layer_set_overflow_mode(s_time_layer, GTextOverflowModeFill);
 	update_time_text_vertical_spacing();
 	APP_LOG(APP_LOG_LEVEL_INFO, "update_time_text out");
 }
@@ -431,7 +442,6 @@ void main_window_load(Window *window) {
 	
 	s_time_layer = text_layer_create(r_time_text);
 	init_text_layer(s_time_layer, GColorClear);
-	text_layer_set_overflow_mode(s_time_layer, GTextOverflowModeWordWrap);
 	i_time_text = 0;
 	
 	s_date_layer = text_layer_create(r_date);

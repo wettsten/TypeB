@@ -17,9 +17,15 @@ Pebble.addEventListener("showConfiguration",
   function(e) {
     //Load the remote config page
 	var config = "https://dl.dropboxusercontent.com/u/34767519/typeb-config.html";
-	var settings = encodeURIComponent(localStorage.getItem("settings"));
+	var settings = JSON.parse(localStorage.getItem("settings"));
+	if(Pebble.getActiveWatchInfo) {
+		settings.has_color = (Pebble.getActiveWatchInfo().platform == "basalt") ? 1 : 0;
+	} else {
+		settings.has_color = 0;
+	}
 	console.log("Opening Config: " + config);
-	Pebble.openURL(config + "?settings=" + settings);
+	console.log("Settings: " + JSON.stringify(settings));
+	Pebble.openURL(config + "?settings=" + encodeURIComponent(JSON.stringify(settings)));
   }
 );
 Pebble.addEventListener("webviewclosed",

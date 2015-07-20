@@ -31,6 +31,7 @@ extern GRect r_date;
 extern GRect r_time2;
 extern int i_time_text;
 
+
 struct {
 	int round_to;
 	char back_color[8];
