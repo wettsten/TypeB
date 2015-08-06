@@ -136,16 +136,16 @@ char *get_next_size_font(bool bigger) {
 
 void update_time_text_font_size() {
 	APP_LOG(APP_LOG_LEVEL_INFO, "update_time_text_font_size in");
-	APP_LOG(APP_LOG_LEVEL_INFO, "i_time_text: %d", i_time_text);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "i_time_text: %d", i_time_text);
 	GSize max_used_size = text_layer_get_content_size(s_time_layer);
-	APP_LOG(APP_LOG_LEVEL_INFO, "max_used_size.h: %d", max_used_size.h);
-	APP_LOG(APP_LOG_LEVEL_INFO, "r_time_text.size.h: %d", r_time_text.size.h);
-	APP_LOG(APP_LOG_LEVEL_INFO, "max_used_size.w: %d", max_used_size.w);
-	APP_LOG(APP_LOG_LEVEL_INFO, "r_time_text.size.w: %d", r_time_text.size.w);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "max_used_size.h: %d", max_used_size.h);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "r_time_text.size.h: %d", r_time_text.size.h);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "max_used_size.w: %d", max_used_size.w);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "r_time_text.size.w: %d", r_time_text.size.w);
 	if (max_used_size.h > r_time_text.size.h) {
 		//too big! make it one smaller and finish
 		char *s_font = get_next_size_font(false);
-		APP_LOG(APP_LOG_LEVEL_INFO, "s_font: %s", s_font);
+		APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "s_font: %s", s_font);
 		text_layer_set_font(s_time_layer, fonts_get_system_font(s_font));
 		i_time_text--;
 		APP_LOG(APP_LOG_LEVEL_INFO, "update_time_text_font_size out");
@@ -158,7 +158,7 @@ void update_time_text_font_size() {
 	}
 	//make it bigger and recheck
 	char *b_font = get_next_size_font(true);
-	APP_LOG(APP_LOG_LEVEL_INFO, "b_font: %s", b_font);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "b_font: %s", b_font);
 	text_layer_set_font(s_time_layer, fonts_get_system_font(b_font));
 	i_time_text++;
 	APP_LOG(APP_LOG_LEVEL_INFO, "update_time_text_font_size out");
@@ -170,7 +170,7 @@ void update_time_text_vertical_spacing() {
 	GSize max_used_size = text_layer_get_content_size(s_time_layer);
 	GRect frame = layer_get_frame(text_layer_get_layer(s_time_layer));
 	frame.origin.y = r_time_text.origin.y + (r_time_text.size.h - max_used_size.h) / 2;
-	APP_LOG(APP_LOG_LEVEL_INFO, "frame.origin.y : %d", frame.origin.y);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "frame.origin.y : %d", frame.origin.y);
 	layer_set_frame(text_layer_get_layer(s_time_layer), frame);
 	APP_LOG(APP_LOG_LEVEL_INFO, "update_time_text_vertical_spacing out");
 }
@@ -185,7 +185,7 @@ void update_time_text() {
 	
 	// Create a long-lived buffer
   	static char text_buffer[30] = "";
-	APP_LOG(APP_LOG_LEVEL_INFO, "hour_buffer: %s", hour_buffer);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "hour_buffer: %s", hour_buffer);
 	switch (div) {
 		case 0:
 			strcpy(text_buffer,hour_buffer);
@@ -244,7 +244,7 @@ void update_time_text() {
 			strcat(text_buffer,hour_buffer);
 			break;
 	}
-	APP_LOG(APP_LOG_LEVEL_INFO, "text_buffer: %s", text_buffer);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "text_buffer: %s", text_buffer);
   	text_layer_set_text(s_time_layer, text_buffer);
 	
 	text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
@@ -273,11 +273,11 @@ void update_time2() {
   	time_t temp = time(NULL);
   	struct tm *tick_time = localtime(&temp);
 	
-	APP_LOG(APP_LOG_LEVEL_INFO, "hours/minutes: %d/%d", tick_time->tm_hour, tick_time->tm_min);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "hours/minutes: %d/%d", tick_time->tm_hour, tick_time->tm_min);
 	int round = settings.round_to;
-	APP_LOG(APP_LOG_LEVEL_INFO, "settings.round_to: %d", settings.round_to);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "settings.round_to: %d", settings.round_to);
 	int min_mod = tick_time->tm_min % round;
-	APP_LOG(APP_LOG_LEVEL_INFO, "min_mod: %d", min_mod);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "min_mod: %d", min_mod);
 	if (min_mod <= round / 2) {
 		tick_time->tm_min -= min_mod;
 	} else {
@@ -306,8 +306,8 @@ void update_time2() {
 
 void update_colors() {
 	APP_LOG(APP_LOG_LEVEL_INFO, "update_colors in");
-	APP_LOG(APP_LOG_LEVEL_INFO, "settings.back_color: %s", settings.back_color);
-	APP_LOG(APP_LOG_LEVEL_INFO, "settings.fore_color: %s", settings.fore_color);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "settings.back_color: %s", settings.back_color);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "settings.fore_color: %s", settings.fore_color);
 	text_layer_set_background_color(s_background_layer, convert_to_gcolor(settings.back_color));
 	text_layer_set_text_color(s_time2_layer, convert_to_gcolor(settings.fore_color));
 	text_layer_set_text_color(s_time_layer, convert_to_gcolor(settings.fore_color));
@@ -317,12 +317,15 @@ void update_colors() {
 
 void minute_handler(struct tm *tick_time, TimeUnits units_changed) {
 	APP_LOG(APP_LOG_LEVEL_INFO, "minute_handler in");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Minute Changed.");
   	layer_mark_dirty(s_window_layer);
+	layer_mark_dirty(s_battery_layer);
 	APP_LOG(APP_LOG_LEVEL_INFO, "minute_handler out");
 }
 
 void battery_handler(BatteryChargeState charge) {
 	APP_LOG(APP_LOG_LEVEL_INFO, "battery_handler in");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Battery Level Changed.");
 	layer_mark_dirty(s_battery_layer);
 	APP_LOG(APP_LOG_LEVEL_INFO, "battery_handler out");
 }
@@ -347,12 +350,12 @@ void battery_disp_handler(Layer *layer, GContext *ctx) {
     graphics_context_set_fill_color(ctx, convert_to_gcolor(settings.fore_color));
 	
 	BatteryChargeState state = battery_state_service_peek();
-	APP_LOG(APP_LOG_LEVEL_INFO, "state.charge_percent: %d", state.charge_percent);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "state.charge_percent: %d", state.charge_percent);
 	
 	int height = state.charge_percent * 168 / 100;
 	int width = state.charge_percent * 144 / 100;
-	APP_LOG(APP_LOG_LEVEL_INFO, "height: %d", height);
-	APP_LOG(APP_LOG_LEVEL_INFO, "width: %d", width);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "height: %d", height);
+	APP_LOG(APP_LOG_LEVEL_DEBUG_VERBOSE, "width: %d", width);
 	
 	r_battery_left.origin.y = 168 - height;
 	r_battery_left.size.h = height;
@@ -372,6 +375,7 @@ void battery_disp_handler(Layer *layer, GContext *ctx) {
 
 void in_recv_handler(DictionaryIterator *iterator, void *context) {
 	APP_LOG(APP_LOG_LEVEL_INFO, "in_recv_handler in");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Message In.");
 	//Get Tuple
   	Tuple *round_to = dict_find(iterator, KEY_ROUND_TO);
 	Tuple *back_color = dict_find(iterator, KEY_BACK_COLOR);
@@ -389,6 +393,7 @@ void in_recv_handler(DictionaryIterator *iterator, void *context) {
 	
 	persist_write_data(SAVEKEY_SETTINGS, &settings, sizeof(settings));
 	layer_mark_dirty(s_window_layer);
+	layer_mark_dirty(s_battery_layer);
 	APP_LOG(APP_LOG_LEVEL_INFO, "in_recv_handler out");
 }
 
@@ -398,7 +403,6 @@ void display_handler(Layer *me, GContext *context) {
 	update_time_text();
 	update_date();
 	update_colors();
-	layer_mark_dirty(s_battery_layer);
 	APP_LOG(APP_LOG_LEVEL_INFO, "display_handler out");
 }
 
@@ -451,6 +455,7 @@ void main_window_load(Window *window) {
 	init_text_layer(s_time2_layer, GColorClear);
 	
 	layer_mark_dirty(s_window_layer);
+	layer_mark_dirty(s_battery_layer);
 	APP_LOG(APP_LOG_LEVEL_INFO, "main_window_load out");
 }
 

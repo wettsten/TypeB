@@ -14,6 +14,7 @@
         "media": [
             {
                 "file": "images/TypeB_bw.png",
+                "menuIcon": true,
                 "name": "LOGO",
                 "type": "png"
             }
