@@ -330,21 +330,6 @@ void battery_handler(BatteryChargeState charge) {
 	APP_LOG(APP_LOG_LEVEL_INFO, "battery_handler out");
 }
 
-void draw_battery_path(GContext *ctx, Layer *layer, GPath *path, GRect rect) {
-	APP_LOG(APP_LOG_LEVEL_INFO, "draw_battery_path in");
-	const GPathInfo gpi = {
-		.num_points = 4,
-		.points = (GPoint []) {
-			{rect.origin.x, rect.origin.y},
-			{rect.origin.x, rect.origin.y + rect.size.h},
-			{rect.origin.x + rect.size.w, rect.origin.y + rect.size.h},
-			{rect.origin.x + rect.size.w, rect.origin.y}}
-	};
-	path = gpath_create(&gpi);
-	gpath_draw_filled(ctx, path);
-	APP_LOG(APP_LOG_LEVEL_INFO, "draw_battery_path out");
-}
-
 void battery_disp_handler(Layer *layer, GContext *ctx) {
 	APP_LOG(APP_LOG_LEVEL_INFO, "battery_disp_handler in");
     graphics_context_set_fill_color(ctx, convert_to_gcolor(settings.fore_color));
@@ -359,17 +344,17 @@ void battery_disp_handler(Layer *layer, GContext *ctx) {
 	
 	r_battery_left.origin.y = 168 - height;
 	r_battery_left.size.h = height;
-	draw_battery_path(ctx, layer, s_battery_left, r_battery_left);
+	graphics_fill_rect(ctx, r_battery_left, 0, GCornerNone);
 	
 	r_battery_right.size.h = height;
-	draw_battery_path(ctx, layer, s_battery_right, r_battery_right);
+	graphics_fill_rect(ctx, r_battery_right, 0, GCornerNone);
 	
 	r_battery_top.size.w = width;
-	draw_battery_path(ctx, layer, s_battery_top, r_battery_top);
+	graphics_fill_rect(ctx, r_battery_top, 0, GCornerNone);
 	
 	r_battery_bottom.origin.x = 144 - width;
 	r_battery_bottom.size.w = width;
-	draw_battery_path(ctx, layer, s_battery_bottom, r_battery_bottom);
+	graphics_fill_rect(ctx, r_battery_bottom, 0, GCornerNone);
 	APP_LOG(APP_LOG_LEVEL_INFO, "battery_disp_handler out");
 }
 

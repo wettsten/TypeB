@@ -15,10 +15,6 @@ TextLayer *s_background_layer;
 TextLayer *s_time_layer;
 TextLayer *s_time2_layer;
 TextLayer *s_date_layer;
-GPath *s_battery_left;
-GPath *s_battery_right;
-GPath *s_battery_top;
-GPath *s_battery_bottom;
 Layer *s_battery_layer;
 
 int s_battery_width = 5;
